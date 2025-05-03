@@ -1,0 +1,7 @@
+services:
+  web:
+    build: .
+    volumes:
+      - ${HOST_PATH}:/app
+    ports:
+      - "3000:3000"
