@@ -1,8 +1,15 @@
-compose = docker compose -f build/docker-compose.yml
-PROJECT_PATH ?= .
+IMAGE ?= joaopedrolucatto/rails-project-generator
+TAG ?= latest
+PROJECT ?= ./app
 
 build:
-	HOST_PATH=../$(PROJECT_PATH) $(compose) build
+	docker build -t $(IMAGE):$(TAG) .
 
-generate:
-	HOST_PATH=../$(PROJECT_PATH) $(compose) run web rails new . $(ARGS)
+generate: build
+	mkdir -p $(PROJECT)
+	docker run --rm \
+		-v $(PROJECT):/app \
+		$(IMAGE):$(TAG) rails new . $(ARGS)
+
+publish:
+	docker push $(IMAGE):$(TAG)
